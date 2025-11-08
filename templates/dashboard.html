@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Your Tasks</h1>
+        <a href="{{ url_for('add_task') }}" class="btn">Add New Task</a>
+    </div>
+    
+    <div class="tasks-list">
+        {% if tasks %}
+            {% for task in tasks %}
+            <div class="task-card {% if task.completed %}completed{% endif %}">
+                <div class="task-header">
+                    <h3>{{ task.title }}</h3>
+                    <span class="priority {{ task.priority.lower() }}">{{ task.priority }}</span>
+                </div>
+                <p class="description">{{ task.description }}</p>
+                <div class="task-meta">
+                    <span class="category">{{ task.category }}</span>
+                    {% if task.due_date %}
+                    <span class="due-date">Due: {{ task.due_date.strftime('%Y-%m-%d') }}</span>
+                    {% endif %}
+                </div>
+                <div class="task-actions">
+                    <a href="{{ url_for('toggle_task', task_id=task.id) }}" class="btn-small">
+                        {% if task.completed %}Mark Incomplete{% else %}Mark Complete{% endif %}
+                    </a>
+                    <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn-small delete">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-tasks">No tasks yet. Add your first task!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
